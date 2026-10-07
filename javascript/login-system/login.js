@@ -1,4 +1,5 @@
 console.log("A basic JavaScript login system built to practice authentication logic");
+
 const users = [];
 
 // Register a new user
@@ -29,7 +30,8 @@ function register(username, password) {
 
     users.push({
         username,
-        password
+        password,
+        failedAttempts: 0
     });
 
     return {
@@ -40,6 +42,7 @@ function register(username, password) {
 
 // Login user
 function login(username, password) {
+
     const user = users.find(user => user.username === username);
 
     if (!user) {
@@ -50,11 +53,16 @@ function login(username, password) {
     }
 
     if (user.password !== password) {
+
+        user.failedAttempts++;
+
         return {
             success: false,
-            message: "Incorrect password."
+            message: `Incorrect password. Failed attempts: ${user.failedAttempts}`
         };
     }
+
+    user.failedAttempts = 0;
 
     return {
         success: true,
@@ -63,21 +71,25 @@ function login(username, password) {
 }
 
 // Register accounts
-console.log("=== ACCOUNT REGISTRATION ===");
+console.log("\n=== ACCOUNT REGISTRATION ===");
 
-console.log(register("zaid", "12345"));
+console.log(register("zaid", "123456"));
 console.log(register("ahmed", "abc123"));
 
-// Login attempts
+// Login tests
 console.log("\n=== LOGIN TEST ===");
 
-console.log(login("zaid", "12345"));
 console.log(login("zaid", "wrong"));
-console.log(login("unknown", "12345"));
+console.log(login("zaid", "wrong"));
+console.log(login("zaid", "123456"));
+
+console.log(login("unknown", "123456"));
 
 // Display safe account information
 console.log("\n=== REGISTERED USERS ===");
 
 users.forEach((user, index) => {
-    console.log(`${index + 1}. ${user.username}`);
+    console.log(
+        `${index + 1}. ${user.username} | Failed attempts: ${user.failedAttempts}`
+    );
 });
