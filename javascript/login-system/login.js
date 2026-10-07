@@ -3,6 +3,21 @@ const users = [];
 
 // Register a new user
 function register(username, password) {
+
+    if (username.length < 3) {
+        return {
+            success: false,
+            message: "Username must be at least 3 characters."
+        };
+    }
+
+    if (password.length < 6) {
+        return {
+            success: false,
+            message: "Password must be at least 6 characters."
+        };
+    }
+
     const existingUser = users.find(user => user.username === username);
 
     if (existingUser) {
